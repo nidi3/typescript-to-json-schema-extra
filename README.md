@@ -1,0 +1,1 @@
+# typescript-to-json-schema-extra
