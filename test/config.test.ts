@@ -7,7 +7,7 @@ import {resolve} from "path";
 
 import {createParser} from "typescript-to-json-schema/dist/factory/parser";
 import {createFormatter} from "typescript-to-json-schema/dist/factory/formatter";
-import {Config, Map} from "typescript-to-json-schema/dist";
+import {Config, Map, Schema} from "typescript-to-json-schema/dist";
 
 import {SchemaGenerator} from "../src/SchemaGenerator";
 import {createProgram} from "../factory/program";
