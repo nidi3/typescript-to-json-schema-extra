@@ -49,7 +49,7 @@
     "preversion": "npm run lint && npm run test",
     "build": "tsc -p .",
     "watch": "tsc -p . -w",
-    "lint": "tslint -c tslint.json '*.ts' 'src/**/*.ts' 'test/*.ts'",
+    "lint": "tslint -c tslint.json '*.ts' 'factory/**/*.ts' 'src/**/*.ts' 'test/*.ts'",
     "test": "tsc -p . && mocha -t 5000 --require source-map-support/register dist/test"
   }
 }

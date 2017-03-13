@@ -7,8 +7,9 @@ import {resolve} from "path";
 
 import {createParser} from "typescript-to-json-schema/dist/factory/parser";
 import {createFormatter} from "typescript-to-json-schema/dist/factory/formatter";
-import {Config, Map, Schema} from "typescript-to-json-schema/dist";
+import {Map, Schema} from "typescript-to-json-schema/dist";
 
+import {ExtConfig} from "../src/ExtConfig";
 import {SchemaGenerator} from "../src/SchemaGenerator";
 import {createProgram} from "../factory/program";
 
@@ -16,7 +17,7 @@ const validator: Ajv.Ajv = new Ajv();
 const basePath: string = "test/config";
 
 type PartialConfig = {
-    [Key in keyof Config]?: Config[Key];
+    [Key in keyof ExtConfig]?: ExtConfig[Key];
 };
 
 function assertSchema(name: string, partialConfig: PartialConfig): void {
@@ -49,8 +50,8 @@ describe("all schemas", () => {
 
 describe("file list", () => {
     it("should parse all given files", () => {
-        const generator: SchemaGenerator = createGenerator("file-list", <any>{
-            path: [`${basePath}/file-list/main.ts`, `${basePath}/file-list/sub.ts`],
+        const generator: SchemaGenerator = createGenerator("file-list", {
+            paths: [`${basePath}/file-list/main.ts`, `${basePath}/file-list/sub/sub.ts`],
             topRef: true,
         });
 
@@ -67,20 +68,33 @@ describe("compiler options", () => {
     });
 });
 
+describe("line comment", () => {
+    it("should also treat // comments", () => {
+        const generator: SchemaGenerator = createGenerator("line-comment", {
+            topRef: true,
+            jsDoc: "extended",
+            lineComment: true,
+        });
+        assertSchemaEqual(generator.createSchema("SimpleObject"), json("line-comment", "schema"));
+    });
+});
+
 function createGenerator(name: string, partialConfig: PartialConfig, options?: ts.CompilerOptions): SchemaGenerator {
-    const config: Config = createConfig(name, partialConfig);
+    const config: ExtConfig = createConfig(name, partialConfig);
     const program: ts.Program = createProgram(config, options);
     return new SchemaGenerator(program, createParser(program, config), createFormatter(config));
 }
 
-function createConfig(name: string, partialConfig: PartialConfig): Config {
+function createConfig(name: string, partialConfig: PartialConfig): ExtConfig {
     return {
         path: partialConfig.path || resolve(`${basePath}/${name}/*.ts`),
+        paths: partialConfig.paths,
         type: partialConfig.type,
 
         expose: partialConfig.expose,
         topRef: partialConfig.topRef,
         jsDoc: partialConfig.jsDoc,
+        lineComment: partialConfig.lineComment,
     };
 }
 

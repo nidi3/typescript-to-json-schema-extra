@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "SimpleObject": {
+            "title": "interface",
+            "type": "object",
+            "properties": {
+                "required": {
+                    "description": "A comment ",
+                    "title": "required",
+                    "type": "string"
+                },
+                "optional": {
+                    "title": "line",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "required"
+            ],
+            "additionalProperties": false,
+            "description": "An interface "
+        }
+    },
+    "$ref": "#/definitions/SimpleObject"
+}
