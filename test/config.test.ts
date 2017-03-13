@@ -50,5 +50,4 @@ function assertSchema(name: string, partialConfig: PartialConfig): void {
 
 describe("config", () => {
     // assertSchema("expose-all-topref-true", {type: "MyObject", expose: "all", topRef: true, jsDoc: "none"});
-
 });
