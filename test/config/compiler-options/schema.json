@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "MyObject": {
+            "type": "object",
+            "properties": {
+                "propA": {
+                    "type": "number"
+                },
+                "propB": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "propA",
+                "propB"
+            ],
+            "additionalProperties": false
+        },
+        "SimpleObject": {
+            "type": "object",
+            "properties": {
+                "obj": {
+                    "$ref": "#/definitions/MyObject"
+                },
+                "required": {
+                    "type": "string"
+                },
+                "optional": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "required",
+                "obj"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "$ref": "#/definitions/SimpleObject"
+}

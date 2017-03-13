@@ -1,16 +1,16 @@
 import * as Ajv from "ajv";
 import * as ts from "typescript";
 
-import { assert } from "chai";
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import {assert} from "chai";
+import {readFileSync} from "fs";
+import {resolve} from "path";
 
-import { createProgram } from "typescript-to-json-schema/dist/factory/program";
-import { createParser } from "typescript-to-json-schema/dist/factory/parser";
-import { createFormatter } from "typescript-to-json-schema/dist/factory/formatter";
-import { Config } from "typescript-to-json-schema/dist";
+import {createParser} from "typescript-to-json-schema/dist/factory/parser";
+import {createFormatter} from "typescript-to-json-schema/dist/factory/formatter";
+import {Config} from "typescript-to-json-schema/dist";
 
-import { SchemaGenerator } from "../src/SchemaGenerator";
+import {SchemaGenerator} from "../src/SchemaGenerator";
+import {createProgram} from "../factory/program";
 
 const validator: Ajv.Ajv = new Ajv();
 const basePath: string = "test/config";
@@ -21,33 +21,77 @@ type PartialConfig = {
 
 function assertSchema(name: string, partialConfig: PartialConfig): void {
     it(name, () => {
-        const config: Config = {
-            path: resolve(`${basePath}/${name}/*.ts`),
-            type: partialConfig.type,
-
-            expose: partialConfig.expose,
-            topRef: partialConfig.topRef,
-            jsDoc: partialConfig.jsDoc,
-        };
-
-        const program: ts.Program = createProgram(config);
-        const generator: SchemaGenerator = new SchemaGenerator(
-            program,
-            createParser(program, config),
-            createFormatter(config),
-        );
+        const generator: SchemaGenerator = createGenerator(name, partialConfig);
 
         const expected: any = JSON.parse(readFileSync(resolve(`${basePath}/${name}/schema.json`), "utf8"));
-        const actual: any = JSON.parse(JSON.stringify(generator.createSchema(config.type)));
+        const actual: any = generator.createSchema(partialConfig.type);
 
-        assert.isObject(actual);
-        assert.deepEqual(actual, expected);
-
-        validator.validateSchema(actual);
-        assert.equal(validator.errors, null);
+        assertSchemaEqual(actual, expected);
     });
 }
 
-describe("config", () => {
-    // assertSchema("expose-all-topref-true", {type: "MyObject", expose: "all", topRef: true, jsDoc: "none"});
+describe("all schemas", () => {
+    it("should find all types in the slected files", () => {
+        const generator: SchemaGenerator = createGenerator("all-schemas", {topRef: true});
+        let count: number = 0;
+        const schemas: Map<Schema> = generator.createSchemas((fileName: string) => {
+            count++;
+            return !!fileName.match("main.ts$");
+        });
+        assert.isAbove(count, 1);
+
+        // tslint:disable-next-line:no-string-literal
+        assertSchemaEqual(schemas["SimpleObject"], json("all-schemas", "SimpleObject"));
+        // tslint:disable-next-line:no-string-literal
+        assertSchemaEqual(schemas["MyObject"], json("all-schemas", "MyObject"));
+    });
 });
+
+describe("file list", () => {
+    it("should parse all given files", () => {
+        const generator: SchemaGenerator = createGenerator("file-list", <any>{
+            path: [`${basePath}/file-list/main.ts`, `${basePath}/file-list/sub.ts`],
+            topRef: true,
+        });
+
+        assertSchemaEqual(generator.createSchema("MyObject"), json("file-list", "MyObject"));
+        assertSchemaEqual(generator.createSchema("SimpleObject"), json("file-list", "SimpleObject"));
+    });
+});
+
+describe("compiler options", () => {
+    it("should use additional compiler options", () => {
+        const generator: SchemaGenerator = createGenerator("compiler-options", {topRef: true},
+            {baseUrl: `${basePath}/compiler-options/lib`});
+        assertSchemaEqual(generator.createSchema("SimpleObject"), json("compiler-options", "schema"));
+    });
+});
+
+function createGenerator(name: string, partialConfig: PartialConfig, options?: ts.CompilerOptions): SchemaGenerator {
+    const config: Config = createConfig(name, partialConfig);
+    const program: ts.Program = createProgram(config, options);
+    return new SchemaGenerator(program, createParser(program, config), createFormatter(config));
+}
+
+function createConfig(name: string, partialConfig: PartialConfig): Config {
+    return {
+        path: partialConfig.path || resolve(`${basePath}/${name}/*.ts`),
+        type: partialConfig.type,
+
+        expose: partialConfig.expose,
+        topRef: partialConfig.topRef,
+        jsDoc: partialConfig.jsDoc,
+    };
+}
+
+function assertSchemaEqual(actual: any, expected: any): void {
+    assert.isObject(actual);
+    assert.deepEqual(actual, expected);
+
+    validator.validateSchema(actual);
+    assert.equal(validator.errors, null);
+}
+
+function json(path: string, name: string): any {
+    return JSON.parse(readFileSync(resolve(`${basePath}/${path}/${name}.json`), "utf8"));
+}
