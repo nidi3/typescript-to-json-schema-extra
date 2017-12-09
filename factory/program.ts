@@ -34,6 +34,7 @@ function createProgramFromConfig(configFile: string): ts.Program {
 
     return ts.createProgram(parseResult.fileNames, parseResult.options);
 }
+
 function createProgramFromGlob(fileGlob: string|string[], options?: ts.CompilerOptions): ts.Program {
     const opts: ts.CompilerOptions = Object.assign({
         noEmit: true,

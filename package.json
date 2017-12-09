@@ -12,12 +12,7 @@
     "type": "git",
     "url": "https://github.com/nidi3/typescript-to-json-schema-extra.git"
   },
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "https://opensource.org/licenses/Apache-2.0"
-    }
-  ],
+  "license": "Apache-2.0",
   "keywords": [
     "ts",
     "typescript",
