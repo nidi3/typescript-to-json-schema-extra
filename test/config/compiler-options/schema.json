@@ -37,5 +37,6 @@
             "additionalProperties": false
         }
     },
+    "filename": "test/config/compiler-options/main.ts",
     "$ref": "#/definitions/SimpleObject"
 }

@@ -18,5 +18,6 @@
             "additionalProperties": false
         }
     },
+    "filename": "test/config/file-list/sub/sub.ts",
     "$ref": "#/definitions/MyObject"
 }

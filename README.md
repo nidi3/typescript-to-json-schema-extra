@@ -6,4 +6,4 @@ Provides some extras for [typescript-to-json-schema](https://github.com/xiag-ag/
 - Create a program from a list of files: `ExtConfig.paths`.
 - Provide custom compiler options for a program: `createProgram(config: Config, options?: ts.CompilerOptions): ts.Program`.
 - Treat line comments `//` the same as jsDoc comments `/** */`: `ExtConfig.lineComment`.
-
+- Add the `filename` property to the schema pointing to the ts source code. 

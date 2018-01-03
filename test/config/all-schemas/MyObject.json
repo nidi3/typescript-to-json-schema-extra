@@ -18,5 +18,6 @@
             "additionalProperties": false
         }
     },
+    "filename": "test/config/all-schemas/main.ts",
     "$ref": "#/definitions/MyObject"
 }

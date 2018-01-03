@@ -38,6 +38,7 @@ export class SchemaGenerator {
         return {
             $schema: "http://json-schema.org/draft-04/schema#",
             definitions: this.getRootChildDefinitions(rootType),
+            filename: node.getSourceFile().path,
             ...this.getRootTypeDefinition(rootType),
         };
     }

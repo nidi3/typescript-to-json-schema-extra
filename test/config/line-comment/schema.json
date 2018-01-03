@@ -22,5 +22,6 @@
             "description": "An interface "
         }
     },
+    "filename": "test/config/line-comment/main.ts",
     "$ref": "#/definitions/SimpleObject"
 }

@@ -18,7 +18,7 @@ const basePath: string = "test/config";
 
 type PartialConfig = {
     [Key in keyof ExtConfig]?: ExtConfig[Key];
-};
+    };
 
 function assertSchema(name: string, partialConfig: PartialConfig): void {
     it(name, () => {
@@ -32,7 +32,7 @@ function assertSchema(name: string, partialConfig: PartialConfig): void {
 }
 
 describe("all schemas", () => {
-    it("should find all types in the slected files", () => {
+    it("should find all types in the selected files", () => {
         const generator: SchemaGenerator = createGenerator("all-schemas", {topRef: true});
         let count: number = 0;
         const schemas: Map<Schema> = generator.createSchemas((fileName: string) => {
@@ -100,6 +100,7 @@ function createConfig(name: string, partialConfig: PartialConfig): ExtConfig {
 
 function assertSchemaEqual(actual: any, expected: any): void {
     assert.isObject(actual);
+    expected.filename = resolve(expected.filename).toLowerCase();
     assert.deepEqual(actual, expected);
 
     validator.validateSchema(actual);
