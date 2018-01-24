@@ -38,7 +38,10 @@ export class SchemaGenerator {
         return {
             $schema: "http://json-schema.org/draft-04/schema#",
             definitions: this.getRootChildDefinitions(rootType),
-            filename: node.getSourceFile().path,
+            extra: {
+                filename: node.getSourceFile().path,
+                members: node.kind === ts.SyntaxKind.EnumDeclaration ? (node as ts.EnumDeclaration).members.map(m => m.name.getText()) : undefined
+            },
             ...this.getRootTypeDefinition(rootType),
         };
     }
