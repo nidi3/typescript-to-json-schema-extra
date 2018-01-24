@@ -52,7 +52,7 @@ export function createProgram(config: ExtConfig, options?: ts.CompilerOptions): 
     ts.sys.readFile = (name: string, encoding?: string) => {
         const content: string = readFile(name, encoding);
         if (config.lineComment && /\.ts$/.test(name) && !/\.d\.ts$/.test(name)) {
-            return content.replace(/^([^\/\n]+)\/\/([^\n]+)$/gm,
+            return content.replace(/^([ \t]*\w[^\/\n]+)\/\/([^\n]+)$/gm,
                 (match: string, p1: string, p2: string) => "/**\n* " + p2.replace(/@/g, "\n* @") + "\n*/\n" + p1);
         }
         return content;
