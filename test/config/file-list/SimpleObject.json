@@ -17,6 +17,8 @@
             "additionalProperties": false
         }
     },
-    "filename": "test/config/file-list/main.ts",
+    "extra": {
+        "filename": "test/config/file-list/main.ts"
+    },
     "$ref": "#/definitions/SimpleObject"
 }

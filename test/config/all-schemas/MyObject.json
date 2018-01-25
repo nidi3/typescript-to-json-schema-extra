@@ -18,6 +18,8 @@
             "additionalProperties": false
         }
     },
-    "filename": "test/config/all-schemas/main.ts",
+    "extra": {
+        "filename": "test/config/all-schemas/main.ts"
+    },
     "$ref": "#/definitions/MyObject"
 }

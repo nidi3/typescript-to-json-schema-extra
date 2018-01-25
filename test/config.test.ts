@@ -45,6 +45,8 @@ describe("all schemas", () => {
         assertSchemaEqual(schemas["SimpleObject"], json("all-schemas", "SimpleObject"));
         // tslint:disable-next-line:no-string-literal
         assertSchemaEqual(schemas["MyObject"], json("all-schemas", "MyObject"));
+        // tslint:disable-next-line:no-string-literal
+        assertSchemaEqual(schemas["MyEnum"], json("all-schemas", "MyEnum"));
     });
 });
 
@@ -100,7 +102,7 @@ function createConfig(name: string, partialConfig: PartialConfig): ExtConfig {
 
 function assertSchemaEqual(actual: any, expected: any): void {
     assert.isObject(actual);
-    expected.filename = resolve(expected.filename).toLowerCase();
+    expected.extra.filename = resolve(expected.extra.filename).toLowerCase();
     assert.deepEqual(actual, expected);
 
     validator.validateSchema(actual);

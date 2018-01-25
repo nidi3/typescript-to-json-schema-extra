@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "MyEnum": {
+            "type": "number",
+            "enum": [
+                1
+            ]
+        }
+    },
+    "extra": {
+        "filename": "test/config/all-schemas/main.ts",
+        "members": [
+            "A"
+        ]
+    },
+    "$ref": "#/definitions/MyEnum"
+}

@@ -5,11 +5,11 @@ import {
     TypeFormatter,
     BaseType,
     DefinitionType,
-    Schema,
     Definition,
     Map,
     NoRootTypeError,
 } from "typescript-to-json-schema/dist";
+import {ExtSchema} from './Schema/ExtSchema';
 
 export class SchemaGenerator {
     public constructor(private program: ts.Program,
@@ -17,9 +17,9 @@ export class SchemaGenerator {
                        private typeFormatter: TypeFormatter) {
     }
 
-    public createSchemas(filter: (fileName: string) => boolean): Map<Schema> {
+    public createSchemas(filter: (fileName: string) => boolean): Map<ExtSchema> {
         const rootNodes: Map<ts.Node> = this.findRootNodes(filter);
-        const schemas: Map<Schema> = {};
+        const schemas: Map<ExtSchema> = {};
         for (let name in rootNodes) {
             if (rootNodes.hasOwnProperty(name)) {
                 schemas[name] = this.createSchemaFromNode(rootNodes[name]);
@@ -28,22 +28,24 @@ export class SchemaGenerator {
         return schemas;
     }
 
-    public createSchema(fullName: string): Schema {
+    public createSchema(fullName: string): ExtSchema {
         return this.createSchemaFromNode(this.findRootNode(fullName));
     }
 
-    private createSchemaFromNode(node: ts.Node): Schema {
+    private createSchemaFromNode(node: ts.Node): ExtSchema {
         const rootType: BaseType = this.nodeParser.createType(node, new Context());
-
-        return {
+        const schema: ExtSchema = {
             $schema: "http://json-schema.org/draft-04/schema#",
             definitions: this.getRootChildDefinitions(rootType),
             extra: {
                 filename: node.getSourceFile().path,
-                members: node.kind === ts.SyntaxKind.EnumDeclaration ? (node as ts.EnumDeclaration).members.map(m => m.name.getText()) : undefined
             },
             ...this.getRootTypeDefinition(rootType),
         };
+        if (node.kind === ts.SyntaxKind.EnumDeclaration) {
+            schema.extra.members = (node as ts.EnumDeclaration).members.map(m => m.name.getText());
+        }
+        return schema;
     }
 
     private findRootNode(fullName: string): ts.Node {
