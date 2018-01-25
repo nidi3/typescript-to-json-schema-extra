@@ -1,15 +1,15 @@
 import * as ts from "typescript";
 import {
-    NodeParser,
-    Context,
-    TypeFormatter,
     BaseType,
-    DefinitionType,
+    Context,
     Definition,
+    DefinitionType,
     Map,
+    NodeParser,
     NoRootTypeError,
+    TypeFormatter,
 } from "typescript-to-json-schema/dist";
-import {ExtSchema} from './Schema/ExtSchema';
+import {ExtSchema} from "./Schema/ExtSchema";
 
 export class SchemaGenerator {
     public constructor(private program: ts.Program,
@@ -43,7 +43,7 @@ export class SchemaGenerator {
             ...this.getRootTypeDefinition(rootType),
         };
         if (node.kind === ts.SyntaxKind.EnumDeclaration) {
-            schema.extra.members = (node as ts.EnumDeclaration).members.map(m => m.name.getText());
+            schema.extra.members = (node as ts.EnumDeclaration).members.map((m: ts.EnumMember) => m.name.getText());
         }
         return schema;
     }

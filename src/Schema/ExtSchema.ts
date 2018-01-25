@@ -1,4 +1,4 @@
-import {Schema} from 'typescript-to-json-schema';
+import {Schema} from "typescript-to-json-schema";
 
 export interface ExtSchema extends Schema {
     extra: ExtraSchemaData;
