@@ -8,4 +8,5 @@ script:
   - npm run lint
   - npm run test
 after_success:
-  - if [[ $TRAVIS_NODE_VERSION = 9 && "$TRAVIS_BRANCH" = "master" ]]; then bash ./release.sh; fi
+  - set -e
+  - if [[ $TRAVIS_NODE_VERSION = 9 && "$TRAVIS_BRANCH" = "master" ]]; then set -e; bash ./release.sh; fi
