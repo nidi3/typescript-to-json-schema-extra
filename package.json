@@ -1,6 +1,6 @@
 {
   "name": "typescript-to-json-schema-extra",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Some extra features for typescript-to-json-schema",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
