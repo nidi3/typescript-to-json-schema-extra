@@ -9,4 +9,4 @@ script:
   - npm run test
 after_success:
   - set -e
-  - if [[ $TRAVIS_NODE_VERSION = 9 && "$TRAVIS_BRANCH" = "master" ]]; then set -e; bash ./release.sh; fi
+  - if [[ $TRAVIS_NODE_VERSION = 9 && "$TRAVIS_BRANCH" = "master" ]]; then bash ./release.sh; fi
