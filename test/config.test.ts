@@ -102,7 +102,7 @@ function createConfig(name: string, partialConfig: PartialConfig): ExtConfig {
 
 function assertSchemaEqual(actual: any, expected: any): void {
     assert.isObject(actual);
-    expected.extra.filename = resolve(expected.extra.filename).toLowerCase().replace(/\\/g, '/');
+    expected.extra.filename = resolve(expected.extra.filename).toLowerCase().replace(/\\/g, "/");
     assert.deepEqual(actual, expected);
 
     validator.validateSchema(actual);
